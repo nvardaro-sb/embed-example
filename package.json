@@ -1,0 +1,39 @@
+{
+  "name": "embed-examples",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Superblocks embed examples",
+  "workspaces": [
+    "react",
+    "server"
+  ],
+  "scripts": {
+    "start": "concurrently -n server,ui -c blue,green \"npm run start -w server\" \"npm run start -w embed-examples-react\"",
+    "start:react": "npm start",
+    "start:server": "npm run start -w server",
+    "build": "npm run build -w embed-examples-react",
+    "test": "npm run test -w embed-examples-react"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "overrides": {
+    "@okta/okta-react": {
+      "react": "18.2.0",
+      "react-dom": "18.2.0"
+    },
+    "react-router": {
+      "react": "18.2.0"
+    },
+    "react-router-dom": {
+      "react": "18.2.0",
+      "react-dom": "18.2.0"
+    },
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "license": "ISC"
+}

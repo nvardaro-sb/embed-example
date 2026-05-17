@@ -1,0 +1,54 @@
+{
+  "name": "embed-examples-react",
+  "version": "0.1.0",
+  "private": true,
+  "proxy": "http://localhost:3001",
+  "dependencies": {
+    "@okta/okta-auth-js": "^7.5.1",
+    "@okta/okta-react": "^6.7.0",
+    "@superblocksteam/embed-react": "^1.2.0",
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/jest": "^27.5.2",
+    "@types/node": "^16.18.87",
+    "@types/react": "^18.2.64",
+    "@types/react-dom": "^18.2.21",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-router-dom": "^6.22.3",
+    "react-scripts": "5.0.1",
+    "typescript": "^4.9.5",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "build": "cross-env NODE_OPTIONS=--no-deprecation GENERATE_SOURCEMAP=false env-cmd -f ../.env react-scripts build",
+    "test": "cross-env NODE_OPTIONS=--no-deprecation env-cmd -f ../.env react-scripts test",
+    "eject": "react-scripts eject",
+    "start": "cross-env NODE_OPTIONS=--no-deprecation env-cmd -f ../.env react-scripts start",
+    "start:server": "node ../server/index.js",
+    "start:all": "npm start --prefix .."
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "env-cmd": "^10.1.0"
+  }
+}
