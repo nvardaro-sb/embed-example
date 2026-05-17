@@ -1,0 +1,21 @@
+# Node modules
+node_modules/
+
+# CRA production output (do not commit — embeds REACT_APP_* from local .env)
+react/build/
+
+# Secrets and local env (keep *.example files tracked)
+.env
+.env.local
+.env.development.local
+.env.production.local
+.env.test.local
+
+# Nested clone of the same example (empty or separate repo breaks `git add .`)
+superblocks-embed-local-example/
+
+# OS or Editor folders
+.DS_Store
+.vscode/
+.idea/
+
