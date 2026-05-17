@@ -12,9 +12,10 @@
 
 ## Step 1: Get code onto the server
 
-SSH or log into the remote server, then clone the repo:
+SSH or log into the remote server, then install git and clone the repo:
 
 ```bash
+sudo apt-get install -y git
 git clone https://github.com/nvardaro-sb/embed-example.git /opt/dealer-direct-poc
 ```
 
@@ -44,40 +45,40 @@ cd /opt/dealer-direct-poc
 npm install
 ```
 
+> **Note:** Do not run `npm run build` yet — the React build bakes in `REACT_APP_*` values from `.env`, so the `.env` file must be filled in first (Step 3). Run the build after completing Step 3.
+
 ---
 
 ## Step 3: Set up environment variables on the server
 
-Create a `.env` file:
+Copy the example file to create your `.env`:
 
 ```bash
-sudo nano /opt/dealer-direct-poc/.env
+cp /opt/dealer-direct-poc/.env.example /opt/dealer-direct-poc/.env
+nano /opt/dealer-direct-poc/.env
 ```
 
-Paste in:
+All the keys are already in the file — just fill in the empty values:
 
-```
-NODE_ENV=production
-PORT=3000
+- `SB_EMBED_TOKEN` — Superblocks → **Settings** → **Embed** → **Embed Tokens** → create or copy a token
+- `REACT_APP_SUPERBLOCKS_EMBED_SRC` — Open your app in Superblocks → click **Embed** → copy the embed URL (must contain `/embed/applications/` in the path)
+- `REACT_APP_OKTA_ISSUER` — Okta Admin Console → **Security** → **API** → **Authorization Servers** → open `default` → copy the **Issuer URI**
+- `REACT_APP_OKTA_CLIENT_ID` — Okta Admin Console → your SPA app → **General** tab → **Client ID**
+- `DATABASE_URL` — NeonDB dashboard → **Connection Details** → use the **pooled** connection string
 
-REACT_APP_AUTH_MODE=okta
-REACT_APP_OKTA_ISSUER=https://<okta-domain>/oauth2/default
-REACT_APP_OKTA_CLIENT_ID=...
-
-SUPERBLOCKS_EMBED_TOKEN=...
-REACT_APP_SUPERBLOCKS_EMBED_SRC=https://app.superblocks.com/...
-
-DATABASE_URL=...NeonDB pooled connection string...
-```
-
-Get your `DATABASE_URL` from the NeonDB dashboard under **Connection Details** — use the pooled connection string.
-
-Get your `REACT_APP_SUPERBLOCKS_EMBED_SRC` from the Superblocks app embed settings.
+> **Saving in nano:** When done editing, press `Ctrl + X` → `Y` → `Enter` to save and exit.
 
 Lock down the file permissions:
 
 ```bash
 chmod 600 /opt/dealer-direct-poc/.env
+```
+
+Now build the React app (`.env` must be in place before this):
+
+```bash
+cd /opt/dealer-direct-poc
+npm run build
 ```
 
 ---
@@ -112,6 +113,8 @@ StandardError=journal
 WantedBy=multi-user.target
 ```
 
+> **Saving in nano:** Press `Ctrl + X` → `Y` → `Enter` to save and exit.
+
 Enable and start it:
 
 ```bash
@@ -122,6 +125,22 @@ sudo systemctl status dealer-direct
 ```
 
 The server is now running in the background, auto-restarts if it crashes, and survives reboots.
+
+To verify it started correctly:
+
+```bash
+# Check the service status — look for "active (running)"
+sudo systemctl status dealer-direct
+
+# Quick smoke test — should return JSON
+curl http://localhost:3000/api/superblocks/token
+```
+
+If the service failed to start, check the logs:
+
+```bash
+sudo journalctl -u dealer-direct -n 50
+```
 
 ---
 
