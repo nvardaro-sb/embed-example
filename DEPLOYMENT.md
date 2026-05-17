@@ -15,7 +15,7 @@
 SSH or log into the remote server, then clone the repo:
 
 ```bash
-git clone <repo-url> /opt/dealer-direct-poc
+git clone https://github.com/nvardaro-sb/embed-example.git /opt/dealer-direct-poc
 ```
 
 Fix ownership so the service user can read the files:
@@ -23,6 +23,8 @@ Fix ownership so the service user can read the files:
 ```bash
 sudo chown -R <linux-username>:<linux-username> /opt/dealer-direct-poc
 ```
+
+> **Finding your username:** Run `whoami` on the server — the output (e.g. `ubuntu`, `debian`) is what you substitute for `<linux-username>`. On Proxmox/Debian VMs, common defaults are `ubuntu` or `debian`.
 
 ---
 
@@ -97,7 +99,7 @@ After=network.target
 
 [Service]
 Type=simple
-User=<linux-username>  # must match an existing account on the server
+User=<linux-username>  # run `whoami` on the server to find this
 WorkingDirectory=/opt/dealer-direct-poc
 EnvironmentFile=/opt/dealer-direct-poc/.env
 ExecStart=/usr/bin/node server/index.js
