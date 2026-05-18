@@ -296,3 +296,31 @@ To tail logs in real time:
 ```bash
 sudo journalctl -u dealer-direct -f
 ```
+
+---
+
+## Step 11: Access the app from your laptop
+
+To open the app in a browser, your laptop needs to know how to resolve the server's hostname. Add an entry to your local machine's hosts file.
+
+**On Mac/Linux** — run in your local terminal (not the server):
+
+```bash
+sudo nano /etc/hosts
+```
+
+**On Windows** — open Notepad as Administrator and edit `C:\Windows\System32\drivers\etc\hosts`
+
+Add this line at the bottom, replacing `<server-ip>` with the server's IP address:
+
+```
+<server-ip>    dealerdirect-poc.octane.internal
+```
+
+Save and exit. Then open your browser and go to:
+
+```
+https://dealerdirect-poc.octane.internal
+```
+
+> **Certificate warning:** Your browser will show a security warning because the certificate is self-signed. Click **Advanced** → **Proceed** (or equivalent) to continue.
