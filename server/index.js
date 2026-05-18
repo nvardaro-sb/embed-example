@@ -52,16 +52,7 @@ if (!SB_EMBED_TOKEN || !SB_EMBED_TOKEN.trim()) {
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "..", "build")));
-
-app.get("/", (req, res) => {
-  res.json({
-    message: "Welcome to the Superblocks Embed API Server",
-    endpoints: {
-      token: "/api/superblocks/token",
-    },
-  });
-});
+app.use(express.static(path.join(__dirname, "..", "react", "build")));
 
 async function userFromRequest(req) {
   if (!oktaVerifier) {
@@ -172,6 +163,11 @@ app.get("/api/superblocks/token", checkAuthentication, (req, res) => {
         message: error.message,
       });
     });
+});
+
+// Catch-all: serve React app for any non-API route (must be last)
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "react", "build", "index.html"));
 });
 
 app.listen(PORT, () => {

@@ -132,9 +132,10 @@ To verify it started correctly:
 # Check the service status — look for "active (running)"
 sudo systemctl status dealer-direct
 
-# Quick smoke test — should return JSON
 curl http://localhost:3000/api/superblocks/token
 ```
+
+> **Expected response:** `{"error":"Unauthorized"}` — this is correct. It means the server is running and responding. The endpoint requires an Okta JWT, so an unauthorized error without one is expected behavior.
 
 If the service failed to start, check the logs:
 
@@ -150,11 +151,17 @@ sudo journalctl -u dealer-direct -n 50
 sudo apt-get install -y nginx
 ```
 
-If the firewall is active, allow HTTP and HTTPS traffic:
+Then check if a firewall is running (on a fresh Debian install it usually isn't):
+
+```bash
+sudo ufw status
+```
+
+- `command not found` or `Status: inactive` — no firewall, nothing else to do here.
+- `Status: active` — firewall is on, run this before continuing:
 
 ```bash
 sudo ufw allow 'Nginx Full'
-sudo ufw status
 ```
 
 ---
@@ -214,6 +221,8 @@ server {
 }
 ```
 
+> **Saving in nano:** Press `Ctrl + X` → `Y` → `Enter` to save and exit.
+
 Enable and reload nginx:
 
 ```bash
@@ -249,7 +258,11 @@ Add a new line at the bottom:
 127.0.0.1    dealerdirect-poc.octane.internal
 ```
 
+Add the line at the very bottom of the file, after the last existing entry.
+
 Using `127.0.0.1` means the server resolves the hostname to itself, which is correct for a self-contained POC running everything on one machine.
+
+> **Saving in nano:** Press `Ctrl + X` → `Y` → `Enter` to save and exit.
 
 ---
 
@@ -261,13 +274,17 @@ Test DNS resolution:
 ping dealerdirect-poc.octane.internal
 ```
 
-Should resolve to `127.0.0.1`. Then test the full stack:
+Should resolve to `127.0.0.1`. Press `Ctrl + C` to stop the ping. Then test the full stack:
 
 ```bash
 curl -k https://dealerdirect-poc.octane.internal
 ```
 
-The `-k` flag skips certificate verification for the self-signed cert. If you get an HTML response, everything is wired up correctly. If you get a connection refused or nginx error, check the logs:
+The `-k` flag skips certificate verification for the self-signed cert.
+
+> **Expected response:** `{"message":"Welcome to the Superblocks Embed API Server","endpoints":{"token":"/api/superblocks/token"}}` — this means nginx, Node, and DNS are all wired up correctly.
+
+If you get a connection refused or nginx error instead, check the logs:
 
 ```bash
 sudo systemctl status dealer-direct
